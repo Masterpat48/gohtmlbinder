@@ -21,7 +21,7 @@ It provides a simple and reusable way to serve web pages without having to manua
 
 - Make a route with dynamic data:
 ```go
-  b.NewRouteData("/route", "file.hmtl", func(r *http.Request) any{dynamic data}
+  b.NewRouteData("/route", "file.hmtl", func(r *http.Request) any{dynamic data})
 ```
 
 - Print all the registred routes:
@@ -35,6 +35,7 @@ It provides a simple and reusable way to serve web pages without having to manua
 ```
 --------------
 # Example
+- Static data
 ```go
 package main
 
@@ -52,4 +53,62 @@ func main() {
 	//start the server on port 1000
 	b.Serve(":1000")
 }
+```
+
+- Dynamic data
+```go
+package main
+
+import (
+	"net/http"
+	"sync"
+
+	"github.com/Masterpat48/gohtmlbinder"
+)
+
+func main() {
+	b := binder.New("index.html")
+
+	var mu sync.Mutex
+	count := 0
+
+	// Main route to show the number
+	b.NewRouteData("/", "index.html", func(r *http.Request) any {
+		mu.Lock()
+		defer mu.Unlock()
+		return map[string]any{"Count": count}
+	})
+
+	// Route to increment the number
+	b.NewRouteData("/increment", "index.html", func(r *http.Request) any {
+		if r.Method == http.MethodPost {
+			mu.Lock()
+			count++
+			mu.Unlock()
+		}
+
+		mu.Lock()
+		defer mu.Unlock()
+		return map[string]any{"Count": count}
+	})
+
+	b.PrintRoutes()
+	b.Serve(":1000")
+}
+```
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Counter Example</title>
+</head>
+<body>
+  <h1>Counter: {{ .Count }}</h1>
+  <form action="/increment" method="POST">
+    <button type="submit">Increment</button>
+  </form>
+</body>
+</html>
+
 ```
