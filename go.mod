@@ -1,4 +1,4 @@
-module gohmtlbinder
+module github.com/Masterpat48/gohtmlbinder
 
 go 1.25.1
 
