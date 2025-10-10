@@ -51,6 +51,23 @@ func (b *Binder) NewRouteData(path string, templateName string, dataFunc func(*h
 	})
 }
 
+// function to print all the registred routes (to call before Serve)
+func (b *Binder) PrintRoutes() {
+	fmt.Println("Registered routes:")
+	err := b.Router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
+		path, _ := route.GetPathTemplate()
+		if path == "" {
+			path = "(unnamed route)"
+		}
+		fmt.Println(" -", path)
+		return nil
+	})
+
+	if err != nil {
+		fmt.Println("Error walking routes:", err)
+	}
+}
+
 // function serve used to start the server with a chosen port
 func (b *Binder) Serve(addr string) error {
 	fmt.Printf("Server started on https://localhost%s\n", addr)

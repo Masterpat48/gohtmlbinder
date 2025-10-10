@@ -24,6 +24,11 @@ It provides a simple and reusable way to serve web pages without having to manua
   b.NewRouteData("/route", "file.hmtl", func(r *http.Request) any{dynamic data}
 ```
 
+- Print all the registred routes:
+```go
+	b.PrintRoutes()
+```
+
 - Start the server:
 ```go
   b.serve(":port")
@@ -37,19 +42,12 @@ import (
 	"fmt"
 
 	"github.com/Masterpat48/gohtmlbinder"
-	"github.com/gorilla/mux"
 )
 
 func main() {
 	b := binder.New("index.html")
 	b.NewRoute("/", "index.html")
-
-	//this uses mux to print all the registred routes
-	b.Router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
-		path, _ := route.GetPathTemplate()
-		fmt.Println("Registered route:", path)
-		return nil
-	})
+	b.PrintRoutes()
 
 	b.Serve(":1000")
 }
