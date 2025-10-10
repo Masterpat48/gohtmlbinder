@@ -10,7 +10,7 @@ import (
 )
 
 type Binder struct {
-	router    *mux.Router
+	Router    *mux.Router
 	templates *template.Template
 	baseDir   string
 }
@@ -24,7 +24,7 @@ func New(baseTemplate string) *Binder {
 	tmpl := template.Must(template.ParseGlob(pattern))
 
 	return &Binder{
-		router:    mux.NewRouter(),
+		Router:    mux.NewRouter(),
 		templates: tmpl,
 		baseDir:   baseDir,
 	}
@@ -32,7 +32,7 @@ func New(baseTemplate string) *Binder {
 
 // function NewRoute used to create a route based on a HTML template
 func (b *Binder) NewRoute(path string, templateName string) {
-	b.router.HandleFunc(path, func(w http.ResponseWriter, r *http.Request) {
+	b.Router.HandleFunc(path, func(w http.ResponseWriter, r *http.Request) {
 		err := b.templates.ExecuteTemplate(w, templateName, nil)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("rendering error %s: %v", templateName, err), http.StatusInternalServerError)
@@ -42,7 +42,7 @@ func (b *Binder) NewRoute(path string, templateName string) {
 
 // function NewRouteData used to create a route w dynamic data
 func (b *Binder) NewRouteData(path string, templateName string, dataFunc func(*http.Request) any) {
-	b.router.HandleFunc(path, func(w http.ResponseWriter, r *http.Request) {
+	b.Router.HandleFunc(path, func(w http.ResponseWriter, r *http.Request) {
 		data := dataFunc(r)
 		err := b.templates.ExecuteTemplate(w, templateName, data)
 		if err != nil {
@@ -54,5 +54,5 @@ func (b *Binder) NewRouteData(path string, templateName string, dataFunc func(*h
 // function serve used to start the server with a chosen port
 func (b *Binder) Serve(addr string) error {
 	fmt.Printf("Server started on https://localhost%s\n", addr)
-	return http.ListenAndServe(addr, b.router)
+	return http.ListenAndServe(addr, b.Router)
 }
