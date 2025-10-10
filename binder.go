@@ -17,7 +17,7 @@ type Binder struct {
 
 // function new used to start the binder
 // baseTempalte can be a file or a pattern like "templates/*html"
-func new(baseTemplate string) *Binder {
+func New(baseTemplate string) *Binder {
 	baseDir := filepath.Dir(baseTemplate)
 	pattern := filepath.Join(baseDir, "*hmtl")
 
@@ -52,7 +52,7 @@ func (b *Binder) NewRouteData(path string, templateName string, dataFunc func(*h
 }
 
 // function serve used to start the server with a chosen port
-func (b *Binder) serve(addr string) error {
+func (b *Binder) Serve(addr string) error {
 	fmt.Printf("Server started on https://localhost%s\n", addr)
 	return http.ListenAndServe(addr, b.router)
 }
