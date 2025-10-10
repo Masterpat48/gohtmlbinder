@@ -19,7 +19,7 @@ type Binder struct {
 // baseTempalte can be a file or a pattern like "templates/*html"
 func New(baseTemplate string) *Binder {
 	baseDir := filepath.Dir(baseTemplate)
-	pattern := filepath.Join(baseDir, "*hmtl")
+	pattern := filepath.Join(baseDir, "*html")
 
 	tmpl := template.Must(template.ParseGlob(pattern))
 
