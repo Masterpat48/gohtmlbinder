@@ -29,6 +29,11 @@ It provides a simple and reusable way to serve web pages without having to manua
 	b.PrintRoutes()
 ```
 
+- Check the registred routes on the /status auto generated route:
+```go
+  b.Status()
+```
+
 - Start the server:
 ```go
   b.serve(":port")
@@ -39,9 +44,7 @@ It provides a simple and reusable way to serve web pages without having to manua
 ```go
 package main
 
-import (
-	"github.com/Masterpat48/gohtmlbinder"
-)
+import binder "github.com/Masterpat48/gohtmlbinder"
 
 func main() {
 	//initialize the binder W the index file (need to have the index file created)
@@ -50,6 +53,8 @@ func main() {
 	b.NewRoute("/", "index.html")
 	//print in console all the registred routes
 	b.PrintRoutes()
+	//Check the routes on the /status route
+	b.Status()
 	//start the server on port 1000
 	b.Serve(":1000")
 }
@@ -93,6 +98,7 @@ func main() {
 	})
 
 	b.PrintRoutes()
+	b.Status()
 	b.Serve(":1000")
 }
 ```
