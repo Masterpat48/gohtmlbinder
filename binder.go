@@ -79,8 +79,7 @@ func (b *Binder) Status() {
 			if path == "" {
 				path = "(unnamed route)"
 			}
-			methods, _ := route.GetMethods()
-			fmt.Fprintf(w, "<li><strong>%s</strong> — %v</li>", path, methods)
+			fmt.Fprintf(w, "<li><strong>%s</strong></li>", path)
 			return nil
 		})
 
