@@ -30,7 +30,7 @@ func New(baseTemplate string) *Binder {
 	}
 }
 
-// function NewRoute used to create a route based on a HTML template
+// function NewRoute used to create a route w static data based on a HTML template
 func (b *Binder) NewRoute(path string, templateName string) {
 	b.Router.HandleFunc(path, func(w http.ResponseWriter, r *http.Request) {
 		err := b.templates.ExecuteTemplate(w, templateName, nil)
@@ -66,6 +66,26 @@ func (b *Binder) PrintRoutes() {
 	if err != nil {
 		fmt.Println("Error walking routes:", err)
 	}
+}
+
+// function Status to print the server current status when you access the /status endpoint
+func (b *Binder) Status() {
+	b.Router.HandleFunc("/status", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		fmt.Fprintln(w, "<h1>Registered routes</h1><ul>")
+
+		b.Router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
+			path, _ := route.GetPathTemplate()
+			if path == "" {
+				path = "(unnamed route)"
+			}
+			methods, _ := route.GetMethods()
+			fmt.Fprintf(w, "<li><strong>%s</strong> — %v</li>", path, methods)
+			return nil
+		})
+
+		fmt.Fprintln(w, "</ul>")
+	})
 }
 
 // function serve used to start the server with a chosen port
